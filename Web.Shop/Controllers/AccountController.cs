@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Web.Shop.Data.Entities.Identity;
 using Web.Shop.Models;
+using Web.Shop.Services;
 
 namespace Web.Shop.Controllers
 {
@@ -15,18 +16,22 @@ namespace Web.Shop.Controllers
     public class AccountController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly IJwtTokenService _jwtTokenService;
+        private readonly SignInManager<AppUser> _signInManager;
 
-        public AccountController(UserManager<AppUser> userManager)
+        public AccountController(UserManager<AppUser> userManager,
+            IJwtTokenService jwtTokenService,
+            SignInManager<AppUser> signInManager)
         {
             _userManager = userManager;
+            _jwtTokenService = jwtTokenService;
+            _signInManager = signInManager;
         }
 
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register([FromBody]RegisterViewModel model)
         {
-            
-
             var user = new AppUser
             {
                 Email=model.Email,
@@ -37,7 +42,12 @@ namespace Web.Shop.Controllers
             if (!result.Succeeded)
                 return BadRequest(new { message = result.Errors});
 
-            return Ok(user.Id);
+            await _signInManager.SignInAsync(user, isPersistent: false);
+
+            return Ok(new
+            {
+                token = _jwtTokenService.CreateToken(user)
+            });
         }
     }
 }
