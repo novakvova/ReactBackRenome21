@@ -25,6 +25,8 @@ namespace Web.Shop.Controllers
         [Route("register")]
         public async Task<IActionResult> Register([FromBody]RegisterViewModel model)
         {
+            
+
             var user = new AppUser
             {
                 Email=model.Email,

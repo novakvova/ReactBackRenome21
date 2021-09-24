@@ -1,3 +1,4 @@
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -15,6 +16,7 @@ using System.Threading.Tasks;
 using Web.Shop.Constants;
 using Web.Shop.Data;
 using Web.Shop.Data.Entities.Identity;
+using Web.Shop.Validations;
 
 namespace Web.Shop
 {
@@ -52,6 +54,9 @@ namespace Web.Shop
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Web.Shop", Version = "v1" });
             });
             services.AddCors();
+
+            services.AddFluentValidation(x =>
+                x.RegisterValidatorsFromAssemblyContaining<RegisterVMValidator>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
