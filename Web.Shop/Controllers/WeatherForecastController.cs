@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Web.Shop.Controllers
@@ -28,6 +29,7 @@ namespace Web.Shop.Controllers
         [Authorize]
         public IEnumerable<WeatherForecast> Get()
         {
+            //Thread.Sleep(3000);
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
