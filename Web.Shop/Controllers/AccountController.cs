@@ -32,10 +32,12 @@ namespace Web.Shop.Controllers
         [Route("register")]
         public async Task<IActionResult> Register([FromBody]RegisterViewModel model)
         {
+            ///Зберігаємо фото
             var user = new AppUser
             {
                 Email=model.Email,
-                UserName=model.UserName
+                UserName=model.UserName,
+                Photo="ssfsdf.jpg"
             };
             var result = await _userManager.CreateAsync(user, model.Password);
 
@@ -52,7 +54,8 @@ namespace Web.Shop.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody]LoginViewModel model)
+        //[Consumes("multipart/form-data")]
+        public async Task<IActionResult> Login([FromForm]LoginViewModel model)
         {
             var result = await _signInManager
                 .PasswordSignInAsync(model.Email, model.Password, false, false);

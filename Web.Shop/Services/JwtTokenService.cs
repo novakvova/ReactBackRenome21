@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -19,19 +20,29 @@ namespace Web.Shop.Services
     public class JwtTokenService : IJwtTokenService
     {
         private readonly IConfiguration _configuration;
+        private readonly UserManager<AppUser> _userManager;
 
-        public JwtTokenService(IConfiguration configuration)
+        public JwtTokenService(IConfiguration configuration,
+            UserManager<AppUser> userManager)
         {
             _configuration = configuration;
+            _userManager = userManager;
         }
 
         public string CreateToken(AppUser user)
         {
+            var roles = _userManager.GetRolesAsync(user).Result;
             List<Claim> claims = new List<Claim>()
             {
                 new Claim("name", user.UserName)
+                //,
+                //new Claim("photo", user.Photo)
             };
 
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim("roles", role));
+            }
             var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetValue<String>("JwtKey")));
             var signinCredentials = new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256);
 

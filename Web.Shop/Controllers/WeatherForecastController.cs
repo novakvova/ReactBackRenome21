@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Web.Shop.Constants;
 
 namespace Web.Shop.Controllers
 {
@@ -26,7 +27,7 @@ namespace Web.Shop.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = Roles.User)]
         public IEnumerable<WeatherForecast> Get()
         {
             //Thread.Sleep(3000);
