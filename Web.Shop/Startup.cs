@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Web.Shop.Constants;
 using Web.Shop.Data;
 using Web.Shop.Data.Entities.Identity;
+using Web.Shop.Mapper;
 using Web.Shop.Services;
 using Web.Shop.Validations;
 
@@ -82,7 +83,9 @@ namespace Web.Shop
             services.AddCors();
 
             services.AddFluentValidation(x =>
-                x.RegisterValidatorsFromAssemblyContaining<RegisterVMValidator>());
+                x.RegisterValidatorsFromAssemblyContaining<Startup>());
+
+            services.AddAutoMapper(typeof(AppMapProfile));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
