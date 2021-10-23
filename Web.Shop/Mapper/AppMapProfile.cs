@@ -15,6 +15,9 @@ namespace Web.Shop.Mapper
             CreateMap<AppUser, UserItemViewModel>()
                 .ForMember(x => x.Image, opt => opt.MapFrom(x => "images/" 
                     + (string.IsNullOrEmpty(x.Photo) ? "noimage.jpg" : x.Photo)));
+
+            CreateMap<RegisterViewModel, AppUser>()
+                .ForMember(x => x.UserName, opt => opt.MapFrom(x =>x.Email));
         }
     }
 }

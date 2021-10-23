@@ -21,7 +21,12 @@ namespace Web.Shop.Validations
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email address is required!")
                 .EmailAddress().WithMessage("Email is not valid!")
-                .Must(BeUniqueEmail).WithName("Email").WithMessage("Email is already registered");
+                .DependentRules(() =>
+                {
+                    RuleFor(x => x.Email).Must(BeUniqueEmail)
+
+                     .WithMessage("Дана пошта уже зареєстрована!");
+                });
             RuleFor(x => x.Password)
                 .NotEmpty().WithName("Password").WithMessage("Password is required")
                 .MinimumLength(5).WithName("Password").WithMessage("Password minimum length is 5");

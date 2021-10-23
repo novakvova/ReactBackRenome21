@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -15,17 +16,20 @@ namespace Web.Shop.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
+        private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
         private readonly IJwtTokenService _jwtTokenService;
         private readonly SignInManager<AppUser> _signInManager;
 
         public AccountController(UserManager<AppUser> userManager,
             IJwtTokenService jwtTokenService,
-            SignInManager<AppUser> signInManager)
+            SignInManager<AppUser> signInManager,
+            IMapper mapper)
         {
             _userManager = userManager;
             _jwtTokenService = jwtTokenService;
             _signInManager = signInManager;
+            _mapper = mapper;
         }
 
         [HttpPost]
@@ -33,12 +37,7 @@ namespace Web.Shop.Controllers
         public async Task<IActionResult> Register([FromBody]RegisterViewModel model)
         {
             ///Зберігаємо фото
-            var user = new AppUser
-            {
-                Email=model.Email,
-                UserName=model.UserName,
-                Photo="ssfsdf.jpg"
-            };
+            var user = _mapper.Map<AppUser>(model);
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
